@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DivineWillApp Playlist Index</title>
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --hover-bg: #f8f8f8;
+            --volume-number-color: #2196F3;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --border-color: #404040;
+            --hover-bg: #3d3d3d;
+            --volume-number-color: #64b5f6;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .theme-switcher {
+            position: relative;
+            display: inline-block;
+        }
+
+        .theme-button {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .theme-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 0;
+            margin-top: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .theme-menu.show {
+            display: block;
+        }
+
+        .theme-option {
+            padding: 8px 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-option:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+            text-decoration: none;
+            color: var(--text-color);
+            display: block;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: var(--hover-bg);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .volume-number {
+            font-size: 1.5em;
+            color: var(--volume-number-color);
+            margin-bottom: 10px;
+        }
+
+        .volume-title {
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--text-color);
+            margin: 40px 0 20px 0;
+            font-size: 1.8em;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--volume-number-color);
+            border-radius: 2px;
+        }
+
+        .additional-playlist {
+            font-size: 1.2em;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Add styles for emojis in playlist titles */
+        .emoji {
+            font-size: 1.4em;
+            margin-right: 8px;
+        }
+
+        /* Update grid layout for additional playlists */
+        #additionalGrid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DivineWillApp Playlist Index</h1>
+        <div class="theme-switcher">
+            <button class="theme-button" id="themeButton">
+                <span id="themeIcon">☀️</span>
+                <span id="themeText">Light Mode</span>
+            </button>
+            <div class="theme-menu" id="themeMenu">
+                <div class="theme-option" data-theme="light">
+                    <span>☀️</span> Light Mode
+                </div>
+                <div class="theme-option" data-theme="dark">
+                    <span>🌙</span> Dark Mode
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Book of Heaven Volumes</h2>
+    <div class="grid-container" id="volumeGrid"></div>
+
+    <h2 class="section-title">Additional Playlists</h2>
+    <div class="grid-container" id="additionalGrid"></div>
+
+    <script>
+        // Theme management
+        const html = document.documentElement;
+        const themeButton = document.getElementById('themeButton');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+
+        // Theme switcher toggle
+        themeButton.addEventListener('click', () => {
+            themeMenu.classList.toggle('show');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!themeButton.contains(e.target)) {
+                themeMenu.classList.remove('show');
+            }
+        });
+
+        // Theme options
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                setTheme(theme);
+                localStorage.setItem('theme', theme);
+                themeMenu.classList.remove('show');
+            });
+        });
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
+            themeText.textContent = theme === 'light' ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const result = {
+                volumes: [],
+                additional: []
+            };
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // Split on comma but not within quotes
+                const match = line.match(/^"?([^"]+)"?,(.+)$/);
+                if (match) {
+                    const title = match[1];
+                    const url = match[2];
+
+                    if (title.includes('Book of Heaven, Volume')) {
+                        const volumeMatch = title.match(/Volume (\d+)/);
+                        if (volumeMatch) {
+                            result.volumes.push({
+                                number: parseInt(volumeMatch[1]),
+                                title: title,
+                                url: url
+                            });
+                        }
+                    } else {
+                        result.additional.push({
+                            title: title,
+                            url: url
+                        });
+                    }
+                }
+            }
+            
+            result.volumes.sort((a, b) => a.number - b.number);
+            return result;
+        }
+
+        // CSV content
+        const csvContent = `Title,URL
+☀️ DAY LIKE TODAY,https://www.youtube.com/playlist?list=PLgBmHazg183B--098Qw6UyERyz9bRe-tK
+"Book of Heaven, Volume 1.",https://www.youtube.com/playlist?list=PLgBmHazg183DLzv2ihEOn9BOGjNbSDDyG
+"Book of Heaven, Volume 2.",https://www.youtube.com/playlist?list=PLgBmHazg183Cy5tN53IxlzyH5xj6f76A6
+"Book of Heaven, Volume 3.",https://www.youtube.com/playlist?list=PLgBmHazg183Ayi8GBaNOEak0UEcguAXqQ
+"Book of Heaven, Volume 4.",https://www.youtube.com/playlist?list=PLgBmHazg183A7pnCTjpXK-8liKedvz8n4
+"Book of Heaven, Volume 5.",https://www.youtube.com/playlist?list=PLgBmHazg183Dj0CVL9XSlnL5moZ8z8DBi
+"Book of Heaven, Volume 6.",https://www.youtube.com/playlist?list=PLgBmHazg183ASlTnNpmbVbMfgoygEdMO2
+"Book of Heaven, Volume 7.",https://www.youtube.com/playlist?list=PLgBmHazg183BGTYvXpdkoie0UB8fqikPs
+"Book of Heaven, Volume 8.",https://www.youtube.com/playlist?list=PLgBmHazg183AngTc3piZueMyK2sQFNITb
+"Book of Heaven, Volume 9.",https://www.youtube.com/playlist?list=PLgBmHazg183ALWUT0BnepU9pyH52QezSN
+"Book of Heaven, Volume 10.",https://www.youtube.com/playlist?list=PLgBmHazg183B4kI6mUJJfXG0sOU7lRTpi
+"Book of Heaven, Volume 11",https://www.youtube.com/playlist?list=PLgBmHazg183AC4J64MLcmIJzvIJCM6O_R
+"Book of Heaven, Volume 12.",https://www.youtube.com/playlist?list=PLgBmHazg183B92X8X9_XOJQWSzm8SdKhM
+"Book of Heaven, Volume 13.",https://www.youtube.com/playlist?list=PLgBmHazg183Bxz6Qyt2O4D12Qs9kykSFk
+"Book of Heaven, Volume 14.",https://www.youtube.com/playlist?list=PLgBmHazg183D8PIEoX_RyUeP_p8veiwod
+"Book of Heaven, Volume 15.",https://www.youtube.com/playlist?list=PLgBmHazg183AhMNdJz_m2HAHqGZwUisNO
+"Book of Heaven, Volume 16.",https://www.youtube.com/playlist?list=PLgBmHazg183C2pC7l1jcyAFOPDUdHevRs
+"Book of Heaven, Volume 17.",https://www.youtube.com/playlist?list=PLgBmHazg183B_TPp949wvVr8MgGkkKPPX
+"Book of Heaven, Volume 18.",https://www.youtube.com/playlist?list=PLgBmHazg183CMmx23vyS9B7n0HDoNyTll
+"Book of Heaven, Volume 19.",https://www.youtube.com/playlist?list=PLgBmHazg183Dxc9KFk_xQPgnDyhjRdvYN
+"Book of Heaven, Volume 20.",https://www.youtube.com/playlist?list=PLgBmHazg183Cv798D-jh1GG97pLFdz50e
+"Book of Heaven, Volume 21.",https://www.youtube.com/playlist?list=PLgBmHazg183Cv1HS1CcuYoLG0YTV17tI9
+"Book of Heaven, Volume 22.",https://www.youtube.com/playlist?list=PLgBmHazg183DINxch0aROFb06eRc_jsN3
+"Book of Heaven, Volume 23.",https://www.youtube.com/playlist?list=PLgBmHazg183C46lBrT0Ce0RjHTr_dCqkC
+"Book of Heaven, Volume 24.",https://www.youtube.com/playlist?list=PLgBmHazg183BI15r84fME5kIgCBIrfW18
+"Book of Heaven, Volume 25.",https://www.youtube.com/playlist?list=PLgBmHazg183DFzcNtODRkZ0VJkQBORdrb
+"Book of Heaven, Volume 26.",https://www.youtube.com/playlist?list=PLgBmHazg183C2F3WRE0c81bWquWb24Zkc
+"Book of Heaven, Volume 27.",https://www.youtube.com/playlist?list=PLgBmHazg183CN4ELqtFwPa2G9E0Mwx8ye
+"Book of Heaven, Volume 28.",https://www.youtube.com/playlist?list=PLgBmHazg183A-JZWdjjEdQN0pgH0DTFj9
+"Book of Heaven, Volume 29.",https://www.youtube.com/playlist?list=PLgBmHazg183Ceoh4YD2OjoKE0quDw_lVp
+"Book of Heaven, Volume 30.",https://www.youtube.com/playlist?list=PLgBmHazg183Ap4RD6Pa0qbxUHKHo9SbcW
+"Book of Heaven, Volume 31.",https://www.youtube.com/playlist?list=PLgBmHazg183ABt5NiirJWTdwOyE7Twnxi
+"Book of Heaven, Volume 32.",https://www.youtube.com/playlist?list=PLgBmHazg183CPB8smhzg0oetId89hZSaP
+"Book of Heaven, Volume 33.",https://www.youtube.com/playlist?list=PLgBmHazg183DZf7y8mBEze0mDT64xYKEX
+"Book of Heaven, Volume 34.",https://www.youtube.com/playlist?list=PLgBmHazg183Cuobgwq8S1Xg-NH6TFdxyt
+"Book of Heaven, Volume 35.",https://www.youtube.com/playlist?list=PLgBmHazg183CV9xa5hWGkgA6rL4KWL3aO
+"Book of Heaven, Volume 36.",https://www.youtube.com/playlist?list=PLgBmHazg183BmrnaxUMaZL__MRFpYC2Y2
+✝️ Hours of the Passion,https://www.youtube.com/playlist?list=PLgBmHazg183A0aoCOUf_BbMULVAYF-549
+🔴 Divine Will: Fr. Pablo Martin Sanguiao,https://www.youtube.com/playlist?list=PLgBmHazg183CeJtwXnFwBVot8Zc1mlGEN
+🙏 Divine WIll Prayers by Servant of God Luisa Piccarreta,https://www.youtube.com/playlist?list=PLgBmHazg183Aun9CwRvawHD8fSaaCznyr
+Ave Maria Divine Will,https://www.youtube.com/playlist?list=PLgBmHazg183CZbWZwnidiNYv1gz9knmg2
+Book of Heaven Videos,https://www.youtube.com/playlist?list=PLgBmHazg183B9YLaDGbYp5MIKpuuvzTZX
+Christ the King,https://www.youtube.com/playlist?list=PLgBmHazg183BVtxeaoU-y1_uJQ6t8BizJ
+Christmas Novena (Nine Excesses of Love),https://www.youtube.com/playlist?list=PLgBmHazg183AQTAqkqBMgveNOvUEkjZ9e
+December 25 - Birth of Jesus,https://www.youtube.com/playlist?list=PLgBmHazg183DgaoX7Rf_lnrezn5xwnqn9
+DIVINE WILL,https://www.youtube.com/playlist?list=PLgBmHazg183DRXqlQtUvaqwYY_xiWMZpK
+Divine Will Music,https://www.youtube.com/playlist?list=PLgBmHazg183Aky9VBfTeuFg5yKhRuKYp8
+Virgin Mary in the Kingdom of the Divine Will,https://www.youtube.com/playlist?list=PLgBmHazg183D2qJZxBqfTMgXsNMR9kO3R`;
+
+        // Create the grids
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = parseCSV(csvContent);
+            const volumeGrid = document.getElementById('volumeGrid');
+            const additionalGrid = document.getElementById('additionalGrid');
+            
+            // Create Book of Heaven volume cards
+            if (data.volumes.length === 0) {
+                volumeGrid.innerHTML = '<p>No volumes found. Please check the data.</p>';
+            } else {
+                data.volumes.forEach(volume => {
+                    const anchor = document.createElement('a');
+                    anchor.href = volume.url;
+                    anchor.className = 'grid-item';
+                    anchor.target = '_blank';
+                    
+                    anchor.innerHTML = `
+                        <div class="volume-number">Volume ${volume.number}</div>
+                        <div class="volume-title">${volume.title}</div>
+                    `;
+                    
+                    volumeGrid.appendChild(anchor);
+                });
+            }
+
+            // Create additional playlist cards
+            if (data.additional.length === 0) {
+                additionalGrid.innerHTML = '<p>No additional playlists found.</p>';
+            } else {
+                data.additional.forEach(playlist => {
+                    const anchor = document.createElement('a');
+                    anchor.href = playlist.url;
+                    anchor.className = 'grid-item';
+                    anchor.target = '_blank';
+                    
+                    // Check if the title starts with an emoji
+                    const titleParts = playlist.title.match(/^([\u{1F300}-\u{1F9FF}🔴✝️🙏])?(.+)$/u);
+                    const emoji = titleParts && titleParts[1] ? titleParts[1] : '';
+                    const title = titleParts && titleParts[2] ? titleParts[2].trim() : playlist.title;
+                    
+                    anchor.innerHTML = `
+                        <div class="additional-playlist">
+                            ${emoji ? `<span class="emoji">${emoji}</span>` : ''}
+                            ${title}
+                        </div>
+                    `;
+                    
+                    additionalGrid.appendChild(anchor);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
