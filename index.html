@@ -176,6 +176,31 @@
         #additionalGrid {
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         }
+
+        /* Add welcome message styles */
+        .welcome-section {
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .welcome-title {
+            color: var(--volume-number-color);
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .welcome-text {
+            line-height: 1.6;
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -194,6 +219,15 @@
                     <span>🌙</span> Dark Mode
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="welcome-section">
+        <div class="welcome-title">🙏 Welcome to the Divine Will Audio Library</div>
+        <div class="welcome-text">
+            Here you'll find a carefully curated collection of Divine Will teachings in audio format. 
+            Browse through the Book of Heaven volumes and additional Divine Will content, all organized for easy access. 
+            May these teachings help deepen your understanding of the Divine Will.
         </div>
     </div>
 
