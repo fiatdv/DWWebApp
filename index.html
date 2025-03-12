@@ -201,6 +201,55 @@
             max-width: 800px;
             margin: 0 auto;
         }
+
+        /* Quick volume index styles */
+        .volume-index {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            padding: 0 20px;
+        }
+
+        .volume-index-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            border: 2px solid var(--volume-number-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .volume-index-button:hover {
+            background-color: var(--volume-number-color);
+            color: var(--card-bg);
+            transform: scale(1.1);
+        }
+
+        /* Footer styles */
+        .footer {
+            max-width: 1200px;
+            margin: 60px auto 20px auto;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-text {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -232,10 +281,17 @@
     </div>
 
     <h2 class="section-title">Book of Heaven Volumes</h2>
+    <div class="volume-index" id="volumeIndex"></div>
     <div class="grid-container" id="volumeGrid"></div>
 
     <h2 class="section-title">Additional Playlists</h2>
     <div class="grid-container" id="additionalGrid"></div>
+
+    <footer class="footer">
+        <div class="footer-text">
+            © 2025 Fundación Hijos de la Luz, Inc. All rights reserved.
+        </div>
+    </footer>
 
     <script>
         // Theme management
@@ -372,7 +428,20 @@ Virgin Mary in the Kingdom of the Divine Will,https://www.youtube.com/playlist?l
             const data = parseCSV(csvContent);
             const volumeGrid = document.getElementById('volumeGrid');
             const additionalGrid = document.getElementById('additionalGrid');
+            const volumeIndex = document.getElementById('volumeIndex');
             
+            // Create quick volume index
+            if (data.volumes.length > 0) {
+                data.volumes.forEach(volume => {
+                    const indexButton = document.createElement('a');
+                    indexButton.href = volume.url;
+                    indexButton.className = 'volume-index-button';
+                    indexButton.target = '_blank';
+                    indexButton.textContent = volume.number;
+                    volumeIndex.appendChild(indexButton);
+                });
+            }
+
             // Create Book of Heaven volume cards
             if (data.volumes.length === 0) {
                 volumeGrid.innerHTML = '<p>No volumes found. Please check the data.</p>';
