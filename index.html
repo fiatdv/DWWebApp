@@ -269,6 +269,52 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             opacity: 0.9;
         }
+
+        /* Social media sharing styles */
+        .social-share {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .social-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .social-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .facebook {
+            background-color: #1877f2;
+        }
+
+        .x-social {
+            background-color: #1877f2;
+        }
+
+        .twitter {
+            background-color: #1da1f2;
+        }
+
+        .linkedin {
+            background-color: #0a66c2;
+        }
+
+        .social-icon {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -309,6 +355,23 @@
         <a href="https://donorbox.org/divinewillapp-2" target="_blank" class="donate-button">
             Donate to keep up this site
         </a>
+        <div class="social-share">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://divinewillapp.com" 
+               target="_blank" 
+               class="social-button facebook">
+                <span class="social-icon">📱</span>Share on Facebook
+            </a>
+            <a href="https://twitter.com/intent/tweet?url=https://divinewillapp.com&text=Check out the Divine Will Audio Library" 
+               target="_blank" 
+               class="social-button x-social">
+                <span class="social-icon">✖️</span>Share on X
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://divinewillapp.com" 
+               target="_blank" 
+               class="social-button linkedin">
+                <span class="social-icon">💼</span>Share on LinkedIn
+            </a>
+        </div>
         <div class="footer-text">
             © 2025 Fundación Hijos de la Luz, Inc. All rights reserved.
         </div>
