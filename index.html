@@ -202,38 +202,31 @@
             margin: 0 auto;
         }
 
-        /* Quick volume index styles */
-        .volume-index {
+        /* Single button container styles */
+        .single-button-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
             justify-content: center;
             max-width: 1200px;
             margin: 0 auto 20px auto;
             padding: 0 20px;
         }
 
-        .volume-index-button {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--card-bg);
-            border: 2px solid var(--volume-number-color);
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: all 0.2s ease;
+        .book-of-heaven-button {
+            background-color: var(--volume-number-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
             text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1em;
+            transition: all 0.2s ease;
+            display: inline-block;
         }
 
-        .volume-index-button:hover {
-            background-color: var(--volume-number-color);
-            color: var(--card-bg);
-            transform: scale(1.1);
+        .book-of-heaven-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0.9;
         }
 
         /* Footer styles */
@@ -346,7 +339,11 @@
     </div>
 
     <h2 class="section-title">Book of Heaven Volumes</h2>
-    <div class="volume-index" id="volumeIndex"></div>
+    <div class="single-button-container">
+        <a href="https://test-by-hand.emergent.host" target="_blank" class="book-of-heaven-button">
+            Book of Heaven
+        </a>
+    </div>
 
     <h2 class="section-title">Additional Playlists</h2>
     <div class="grid-container" id="additionalGrid"></div>
@@ -511,19 +508,6 @@ Virgin Mary in the Kingdom of the Divine Will,https://www.youtube.com/playlist?l
         document.addEventListener('DOMContentLoaded', function() {
             const data = parseCSV(csvContent);
             const additionalGrid = document.getElementById('additionalGrid');
-            const volumeIndex = document.getElementById('volumeIndex');
-            
-            // Create quick volume index
-            if (data.volumes.length > 0) {
-                data.volumes.forEach(volume => {
-                    const indexButton = document.createElement('a');
-                    indexButton.href = volume.url;
-                    indexButton.className = 'volume-index-button';
-                    indexButton.target = '_blank';
-                    indexButton.textContent = volume.number;
-                    volumeIndex.appendChild(indexButton);
-                });
-            }
 
             // Create additional playlist cards
             if (data.additional.length === 0) {
